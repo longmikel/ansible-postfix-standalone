@@ -1,0 +1,75 @@
+#+title: Postfix Setup Playbook
+#+author: Mikel
+#+email: longm.luck@gmail.com
+#+OPTIONS: num:nil ^:{}
+
+* Giới thiệu (Introduction)
+Role hỗ trợ cài đặt và cấu hình SMTP.
+
+Nền tảng đang được hỗ trợ:
+- Ubuntu 20.04 LTS
+- Ubuntu 22.04 LTS
+
+Vai trò này được thử nghiệm dựa trên hai phiên bản LTS mới nhất của Postfix. Hiện tại, điều này dẫn đến hỗ trợ chính thức cho loạt phát hành Postfix:
+- 3.8
+- 3.7
+- 3.6
+
+* Yêu cầu (Requirements)
+None
+
+* Biến (Variable)
+** Các biến chung (General Variable)
+*** OS
+| Name                  | Default          |
+|-----------------------+------------------|
+| os_hostname           | ansible_host     |
+| os_timezone           | Asia/Ho_Chi_Minh |
+| os_bind_interface_wan | eth0             |
+
+** Các biến sử dụng riêng theo mặc định
+| Name                       | Default                                                                                   |
+|----------------------------+-------------------------------------------------------------------------------------------|
+| postfix_executable_path    | /usr/sbin/postfix                                                                         |
+| postfix_package            | mailutils, net-tools                                                                      |
+| postfix_hostname           | os_hostname                                                                               |
+| postfix_mailname           | os_hostname                                                                               |
+| postfix_inet_interfaces    | all                                                                                       |
+| postfix_inet_protocols     | ipv4                                                                                      |
+| postfix_mynetworks         | []                                                                                        |
+| postfix_bind_port          | 10025                                                                                     |
+| postfix_smtpd_banner       | $myhostname ESMTP SMTP                                                                    |
+| postfix_message_size_limit | 52428800                                                                                  |
+| postfix_cert_file          | /etc/ssl/certs/postfix.pem                                                                |
+| postfix_bind_address       | {{ hostvars[inventory_hostname]['ansible_' + os_bind_interface_wan]['ipv4']['address'] }} |
+
+* Tổng quan (Overview)
+** Nhóm máy chủ (Group Servers)
+Khai báo nhóm máy chủ mà bạn cần cài đặt hoặc cấu hình tương ứng với vai trò được kích hoạt ở trên. Kết nối dựa trên =hostname= ứng với mỗi dòng là 1 máy chủ mà bạn muốn kết nối.
+
+*Lưu ý*:
+- Cấu hình DNS cho =hostname= trước khi bắt đầu.
+#+begin_src yaml
+[smtp_x]
+x0.domain.ltd
+#+end_src
+
+** Ví dụ (Example)
+#+begin_src yaml
+---
+- name: SMTP Setup Playbook
+  hosts: smtp_x
+
+  vars:
+    postfix_mynetworks:
+      - 127.0.0.0/8
+      - "[::ffff:127.0.0.0]/104"
+      - "[::1]/128"
+
+  roles:
+    - role: ansible-postfix-standalone
+      tags: [psi]
+#+end_src
+
+* Bản quyền (License)
+MIT
