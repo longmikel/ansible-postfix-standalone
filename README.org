@@ -7,13 +7,10 @@
 Role hỗ trợ cài đặt và cấu hình SMTP.
 
 Nền tảng đang được hỗ trợ:
-- Ubuntu 20.04 LTS
-- Ubuntu 22.04 LTS
+- Ubuntu > 20.04 LTS
 
 Vai trò này được thử nghiệm dựa trên hai phiên bản LTS mới nhất của Postfix. Hiện tại, điều này dẫn đến hỗ trợ chính thức cho loạt phát hành Postfix:
-- 3.8
-- 3.7
-- 3.6
+- > 3.6.x
 
 * Yêu cầu (Requirements)
 None
