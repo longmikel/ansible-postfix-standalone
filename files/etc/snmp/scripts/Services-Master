@@ -1,0 +1,28 @@
+#!/bin/bash
+# Tools Nmap
+NC=$(which nc)
+
+# Variables
+HAProxy=`systemctl status haproxy | grep "Active" | awk '{print $2}'`
+Postfix=`systemctl status postfix | grep "Active" | awk '{print $2}'`
+
+if [ $Postfix == active ]; then
+  SMTP=`echo 1`
+else
+  SMTP=`echo 0`
+fi
+
+# Check the status returned for HAProxy
+if [ $HAProxy == active ] ; then
+  HA=`echo 1`
+else
+  HA=`echo 0`
+fi
+
+# Create JSON string for SERVICES
+echo "$HA - $SMTP"| \
+awk \
+'{printf("{\
+\"HAProxy\":%d ,\
+\"SMTP\":%d}" ,\
+$1,$3)}'

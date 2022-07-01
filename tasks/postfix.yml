@@ -1,0 +1,75 @@
+---
+- name: Postfix | Configure mailname
+  ansible.builtin.template:
+    src: "etc/mailname.j2"
+    dest: "/etc/mailname"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart postfix
+  tags:
+    - configuration
+    - postfix
+    - postfix-mailname
+
+- name: Postfix | Configure primary with main.cf
+  ansible.builtin.template:
+    src: "etc/postfix/main.cf.j2"
+    dest: "/etc/postfix/main.cf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart postfix
+  tags:
+    - configuration
+    - postfix
+    - postfix-main
+
+- name: Postfix | Configure primary with master.cf
+  ansible.builtin.template:
+    src: "etc/postfix/master.cf.j2"
+    dest: "/etc/postfix/master.cf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart postfix
+  tags:
+    - configuration
+    - postfix
+    - postfix-master
+
+- name: Postfix | Configure with TLS
+  ansible.builtin.copy:
+    src: "etc/ssl/matbao.io.pem"
+    dest: "/etc/ssl/certs/"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart postfix
+  tags:
+    - configuration
+    - postfix
+    - postfix-tls-certificates
+
+- name: Postfix | Configure with header check
+  ansible.builtin.template:
+    src: "etc/postfix/header_checks.j2"
+    dest: "/etc/postfix/smtp_header_checks"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart postfix
+  tags:
+    - configuration
+    - postfix
+    - postfix-header-checks
+
+- name: Postfix | Start and Enable postfix service
+  ansible.builtin.systemd:
+    name: postfix
+    state: "{{ service_default_state | default('started') }}"
+    enabled: "{{ service_default_enabled | default(true) | bool }}"
+  tags:
+    - configuration
+    - postfix
+    - postfix-start-enable-service

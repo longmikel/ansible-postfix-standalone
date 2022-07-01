@@ -1,0 +1,11 @@
+---
+- name: Prepare | Installing packages dependencies of postfix
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ postfix_package }}"
+  register: postfix_package_completed
+  tags:
+    - configuration
+    - postfix
+    - postfix-package

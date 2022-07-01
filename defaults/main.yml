@@ -1,0 +1,41 @@
+---
+# Postfix
+os_hostname: "{{ ansible_host }}"
+os_timezone: "Asia/Ho_Chi_Minh"
+
+## Interface
+os_bind_interface_wan: "eth0"
+
+postfix_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + os_bind_interface_wan]['ipv4']['address'] }}"
+
+  ## Package dependencies
+postfix_package:
+  - mailutils
+  - net-tools
+
+## Path to the executable
+postfix_executable_path: "/usr/sbin/postfix"
+
+## Information
+postfix_hostname: "{{ os_hostname }}"
+
+postfix_mailname: "{{ os_hostname }}"
+
+## Network
+postfix_inet_interfaces: "all"
+
+postfix_inet_protocols: "ipv4"
+
+postfix_mynetworks:
+  - 127.0.0.0/8
+  - "[::ffff:127.0.0.0]/104"
+  - "[::1]/128"
+
+postfix_bind_port: 10025
+
+## Other
+postfix_smtpd_banner: "$myhostname ESMTP SMTP"
+
+postfix_message_size_limit: 52428800
+
+postfix_cert_file: "/etc/ssl/certs/postfix.pem"

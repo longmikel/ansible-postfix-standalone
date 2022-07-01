@@ -1,0 +1,21 @@
+---
+- name: Main | Check whether Postfix is installed
+  ansible.builtin.stat:
+    path: "{{ postfix_executable_path }}"
+  register: postfix_check
+  check_mode: false
+  failed_when: false
+  changed_when: false
+
+- name: Main | Register postfix_installed variable
+  ansible.builtin.set_fact:
+    postfix_installed: true
+  when: postfix_check.stat.exists
+
+- name: Main | Prepare configuration task
+  include_tasks: prepare.yml
+  when: postfix_installed is not defined
+
+- name: Main | Postfix configuration task
+  include_tasks: postfix.yml
+  when: postfix_installed is defined
