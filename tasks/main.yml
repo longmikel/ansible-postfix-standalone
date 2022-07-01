@@ -18,4 +18,4 @@
 
 - name: Main | Postfix configuration task
   include_tasks: postfix.yml
-  when: postfix_installed is defined
+  when: postfix_installed is defined or postfix_package_completed is defined
