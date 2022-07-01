@@ -40,7 +40,7 @@
 
 - name: Postfix | Configure with TLS
   ansible.builtin.copy:
-    src: "etc/ssl/matbao.io.pem"
+    src: "etc/ssl/postfix.pem"
     dest: "/etc/ssl/certs/"
     owner: root
     group: root
