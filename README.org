@@ -60,6 +60,32 @@ x0.domain.ltd
 - name: SMTP Setup Playbook
   hosts: smtp_x
 
+  pre_tasks:
+    - name: Changed hostname of machine
+      ansible.builtin.hostname:
+        name: "{{ os_hostname }}"
+      when: ansible_fqdn != ansible_host
+      tags: [psi]
+
+    - name: Changed timezone of machine
+      community.general.timezone:
+        name: "{{ os_timezone }}"
+      tags: [psi]
+
+    - name: Update apt-get repo and cache
+      ansible.builtin.apt:
+        update_cache: true
+        force_apt_get: true
+        cache_valid_time: 3600
+      tags: [psi]
+
+    - name: Upgrade all apt packages
+      ansible.builtin.apt:
+        upgrade: dist
+        force_apt_get: true
+        cache_valid_time: 3600
+      tags: [psi]
+
   vars:
     postfix_mynetworks:
       - 127.0.0.0/8
