@@ -1,8 +1,8 @@
 ---
 - name: Postfix | Configure mailname
   ansible.builtin.template:
-    src: "etc/mailname.j2"
-    dest: "/etc/mailname"
+    src: "{{ postfix_mailname_file.lstrip('/') }}.j2"
+    dest: "{{ postfix_mailname_file }}"
     owner: root
     group: root
     mode: 0644
@@ -14,8 +14,8 @@
 
 - name: Postfix | Configure primary with main.cf
   ansible.builtin.template:
-    src: "etc/postfix/main.cf.j2"
-    dest: "/etc/postfix/main.cf"
+    src: "{{ postfix_main_cf.lstrip('/') }}.j2"
+    dest: "{{ postfix_main_cf }}"
     owner: root
     group: root
     mode: 0644
@@ -27,8 +27,8 @@
 
 - name: Postfix | Configure primary with master.cf
   ansible.builtin.template:
-    src: "etc/postfix/master.cf.j2"
-    dest: "/etc/postfix/master.cf"
+    src: "{{ postfix_master_cf.lstrip('/') }}.j2"
+    dest: "{{ postfix_master_cf }}"
     owner: root
     group: root
     mode: 0644
@@ -53,8 +53,8 @@
 
 - name: Postfix | Configure with header check
   ansible.builtin.template:
-    src: "etc/postfix/header_checks.j2"
-    dest: "/etc/postfix/smtp_header_checks"
+    src: "{{ postfix_header_checks_file.lstrip('/') }}.j2"
+    dest: "{{ postfix_header_checks_file }}"
     owner: root
     group: root
     mode: 0644

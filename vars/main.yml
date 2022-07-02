@@ -1,0 +1,5 @@
+---
+postfix_main_cf: /etc/postfix/main.cf
+postfix_master_cf: /etc/postfix/master.cf
+postfix_mailname_file: /etc/mailname
+postfix_header_checks_file: /etc/postfix/header_checks
